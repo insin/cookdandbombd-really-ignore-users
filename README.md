@@ -4,9 +4,9 @@
 
 Really ignores ignored users on cookdandbombd.co.uk
 
-* [Install Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/cookd-and-bombd-really-ignore-users/)
-* [Install Chrome Extension]()
-* [Install as a user script]() (requires a [user script manager](https://greasyfork.org/en#home-step-1))
+* [Install Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/cab-really-ignore-users/)
+* [Install Chrome Extension](https://chrome.google.com/webstore/detail/bnmminpkjkhedhadjfblifhbaoemgadi/)
+* [Install as a user script](https://greasyfork.org/en/scripts/426666-cook-d-and-bomb-d-really-ignore-users) (requires a [user script manager](https://greasyfork.org/en#home-step-1))
 
 ## After installing
 
@@ -29,7 +29,7 @@ Clicking it will take you to your Ignore List and automatically handle adding th
 
 ## Viewing hidden posts and unignoring
 
-To temporarily view hidden posts, open your browser's right-click/context menu and click "Show ignored posts" (this will be a top-level item in Firefox and under a "Cook'd and Bomb'd Ignore Topics" menu item in Chrome).
+To temporarily view hidden posts, open your browser's right-click/context menu and click "Show ignored posts" (this will be a top-level item in Firefox and under a "Cook'd and Bomb'd Really Ignore Users" menu item in Chrome).
 
 | Firefox | Chrome |
 |:-------:|:------:|
