@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "build": "web-ext build",
+    "lint": "web-ext lint",
+    "start": "web-ext run --start-url https://www.cookdandbombd.co.uk",
+    "chrome": "web-ext run --target chromium --start-url https://www.cookdandbombd.co.uk"
+  },
+  "webExt": {
+    "ignoreFiles": [
+      "icons/chrome-web-store-icon.png",
+      "icons/icon.png",
+      "package.json",
+      "README.md",
+      "screenshots/"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "manifest_version": 2,
+  "name": "Cook'd and Bomb'd Really Ignore Users",
+  "short_name": "CaB Really Ignore Users",
+  "description": "Really ignores ignored users",
+  "homepage_url": "https://github.com/insin/cookdandbombd-really-ignore-users",
+  "version": "1.0",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "64": "icons/icon64.png",
+    "96": "icons/icon96.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.cookdandbombd.co.uk/forums/index.php/board*",
+        "https://www.cookdandbombd.co.uk/forums/index.php/topic*",
+        "https://www.cookdandbombd.co.uk/forums/index.php?action=post*",
+        "https://www.cookdandbombd.co.uk/forums/index.php?action=profile;area=lists;sa=ignore*",
+        "https://www.cookdandbombd.co.uk/forums/index.php?action=unread*"
+      ],
+      "js": [
+        "./cookdandbombdreallyignoreusers.user.js"
+      ]
+    }
+  ],
+  "options_ui": {
+    "page": "options.html"
+  },
+  "permissions": [
+    "contextMenus",
+    "storage"
+  ]
+}
