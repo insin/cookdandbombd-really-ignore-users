@@ -56,6 +56,10 @@ function getIgnoredUsers() {
   return JSON.parse(localStorage[IGNORED_USERS_STORAGE] || '[]')
 }
 
+function storeIgnoredUsers(ignoredUsers) {
+  localStorage[IGNORED_USERS_STORAGE] = JSON.stringify(ignoredUsers)
+}
+
 function toggleShowIgnoredPosts(showIgnoredPosts) {
   config.showIgnoredPosts = showIgnoredPosts
   posts.forEach(post => post.updateClassNames())
@@ -64,22 +68,38 @@ function toggleShowIgnoredPosts(showIgnoredPosts) {
 function TopicPage() {
   addIgnoredPostsStyle()
 
-  let ignoredUsers = getIgnoredUsers()
-  let ignoredUserIds = ignoredUsers.map(user => user.id)
-  let ignoredUserNames = ignoredUsers.map(user => user.name)
+  let isLoggedIn = document.querySelector('#guest_form') == null
+
+  let ignoredUsers
+  let ignoredUserIds
+  let ignoredUserNames
+
+  function setIgnoredUsers(ignoreList) {
+    ignoredUsers = ignoreList
+    ignoredUserIds = ignoredUsers.map(user => user.id)
+    ignoredUserNames = ignoredUsers.map(user => user.name)
+  }
+
+  function configureIgnoreControl({$a, $img, userId, userName}) {
+    let isUserIgnored = ignoredUserIds.includes(userId)
+    $a.href = `https://www.cookdandbombd.co.uk/forums/index.php?action=profile;area=lists;sa=ignore&${isUserIgnored ? `unignore=${userId}` : `ignore=${userName}`}`
+    $a.title = `${isUserIgnored ? 'Remove from' : 'Add to'} ignore list`
+    $img.alt = `${isUserIgnored ? 'Remove from' : 'Add to'} ignore list`
+    $img.src = `/forums/Themes/default/images/buttons/${isUserIgnored ? 'close' : 'ignore'}.gif`
+  }
 
   function Post($wrapper) {
     let $userLink = $wrapper.querySelector('div.poster h4 a')
 
     let userId = $userLink.href.match(/;u=(\d+)/)[1]
     let userName = $userLink.textContent
-    let isUserIgnored = ignoredUserIds.includes(userId)
     let quotedUserNames = Array.from($wrapper.querySelectorAll('div.topslice_quote a')).map($a => $a.textContent.match(/Quote from: (.+) on /)[1])
-    let quotesIgnoredUser = config.hidePostsQuotingIgnoredUsers && quotedUserNames.some(userName => ignoredUserNames.includes(userName))
-    let isPostIgnored = isUserIgnored || quotesIgnoredUser
 
     let api = {
       updateClassNames() {
+        let isUserIgnored = ignoredUserIds.includes(userId)
+        let quotesIgnoredUser = config.hidePostsQuotingIgnoredUsers && quotedUserNames.some(userName => ignoredUserNames.includes(userName))
+        let isPostIgnored = isUserIgnored || quotesIgnoredUser
         $wrapper.parentElement.classList.toggle('cab_ignoredPost', isPostIgnored)
         $wrapper.parentElement.classList.toggle('cab_show', config.showIgnoredPosts && isPostIgnored)
       }
@@ -88,21 +108,41 @@ function TopicPage() {
     // Add an ignore/unignore link to user profiles in posts
     if (config.addIgnoreUserControlToPosts) {
       let $a = document.createElement('a')
-      $a.href = `https://www.cookdandbombd.co.uk/forums/index.php?action=profile;area=lists;sa=ignore&${isUserIgnored ? `unignore=${userId}` : `ignore=${userName}`}`
-      $a.title = `${isUserIgnored ? 'Remove from' : 'Add to'} ignore list`
       let $img = document.createElement('img')
-      $img.alt = `${isUserIgnored ? 'Remove from' : 'Add to'} ignore list`
-      $img.src = `/forums/Themes/default/images/buttons/${isUserIgnored ? 'close' : 'ignore'}.gif`
       $a.appendChild($img)
       let $li = document.createElement('li')
       $li.appendChild($a)
+      configureIgnoreControl({$a, $img, userId, userName})
       $wrapper.querySelector('div.poster li.profile ul').appendChild($li)
+
+      // For logged-out users, manage the ignore list independently
+      if (!isLoggedIn) {
+        console.log('not logged in')
+        $a.addEventListener('click', (e) => {
+          console.log('clicked')
+          e.preventDefault()
+          // Get a fresh copy in case it's been changed in another tab
+          let ignoredUsers = getIgnoredUsers()
+          let index = ignoredUsers.findIndex(user => user.id === userId)
+          if (index != -1) {
+            ignoredUsers.splice(index, 1)
+          }
+          else {
+            ignoredUsers.push({id: userId, name: userName})
+          }
+          setIgnoredUsers(ignoredUsers)
+          storeIgnoredUsers(ignoredUsers)
+          configureIgnoreControl({$a, $img, userId, userName})
+          posts.forEach(post => post.updateClassNames())
+        })
+      }
     }
 
     api.updateClassNames()
     return api
   }
 
+  setIgnoredUsers(getIgnoredUsers())
   posts = Array.from(document.querySelectorAll('div.post_wrapper')).map($wrapper => Post($wrapper))
   document.body.classList.add('cab_reallyIgnoreUsers')
 }
@@ -156,12 +196,12 @@ function IgnoreListPage() {
     }
   }
 
-  // Otherwise sync the ignore list
+  // Otherwise sync with the ignore list
   let ignoredUsers = Array.from(document.querySelectorAll('.table_grid tr td:first-child a')).map($a => ({
     id: $a.href.match(/;u=(\d+)/)[1],
     name: $a.textContent,
   }))
-  localStorage[IGNORED_USERS_STORAGE] = JSON.stringify(ignoredUsers)
+  storeIgnoredUsers(ignoredUsers)
 }
 
 function ForumPage() {

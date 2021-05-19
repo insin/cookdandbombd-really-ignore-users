@@ -8,9 +8,7 @@ Really ignores ignored users on cookdandbombd.co.uk
 * [Install Chrome Extension](https://chrome.google.com/webstore/detail/bnmminpkjkhedhadjfblifhbaoemgadi/)
 * [Install as a user script](https://greasyfork.org/en/scripts/426666-cook-d-and-bomb-d-really-ignore-users) (requires a [user script manager](https://greasyfork.org/en#home-step-1))
 
-## After installing
-
-Visit your [Ignore List](https://www.cookdandbombd.co.uk/forums/index.php?action=profile;area=lists;sa=ignore) and the extension will synchronise itself with your ignored users.
+Improves the forum's built-in ignore functionality and implements user ignoring for guests.
 
 The following will now be hidden in topics (and when posting replies):
 
@@ -19,13 +17,19 @@ The following will now be hidden in topics (and when posting replies):
 
 Topics created by ignored users will also be hidden.
 
+## After installing
+
+Visit your [Ignore List](https://www.cookdandbombd.co.uk/forums/index.php?action=profile;area=lists;sa=ignore) and the extension will synchronise itself with your ignored users.
+
+If you're not logged-in, the extension will manage an independent ignore list for you via the new ignore controls it adds to every post.
+
 ## Easier ignoring
 
-The extension also makes it easier to add people to your Ignore List - a new "Add to ignore list" control will be added to a user's profile next to their posts:
+A new "Add to ignore list" control will be added to a user's profile next to their posts:
 
 ![Screenshot of the new 'Add to ignore list' control](screenshots/ignore_control.png)
 
-Clicking it will take you to your Ignore List and automatically handle adding the user to it.
+Clicking it will ignore the user - if you're logged-in, this will take you to your Ignore List and the extension will handle automatically adding the user to it.
 
 ## Viewing hidden posts and unignoring
 
@@ -35,11 +39,11 @@ To temporarily view hidden posts, open your browser's right-click/context menu a
 |:-------:|:------:|
 | ![Screenshot of the 'Show ignored posts' menu item in Firefox](screenshots/firefox_context_menu.png) | ![Screenshot of the 'Show ignored posts' menu item in Chrome](screenshots/chrome_context_menu.png) |
 
-Ignored posts will be displayed with a fetching salmon highlight and clicking the new "Remove from ignore list" control in an ignored user's profile will take you to your Ignore List and automatically handle removing the user from it.
+Ignored posts will be displayed with a fetching salmon highlight, with a new "Remove from ignore list" control added to ignored users:
 
 ![Screenshot of ignored posts being shown](screenshots/showing_ignored_posts.png)
 
-You can then re-hide ignored posts using the same menu item the next time you're viewing a topic.
+Clicking it will unignore the user - if you're logged-in, this will take you to your Ignore List and the extension will handle automatically removing the user from it.
 
 ## Options
 
