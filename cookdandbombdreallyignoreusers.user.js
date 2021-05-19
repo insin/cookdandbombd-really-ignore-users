@@ -2,7 +2,7 @@
 // @name        Cook'd and Bomb'd Really Ignore Users
 // @description Really ignores ignored users
 // @namespace   https://github.com/insin/greasemonkey/
-// @version     1
+// @version     2
 // @match       https://www.cookdandbombd.co.uk/forums/index.php/board*
 // @match       https://www.cookdandbombd.co.uk/forums/index.php/topic*
 // @match       https://www.cookdandbombd.co.uk/forums/index.php?action=post*
