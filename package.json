@@ -9,9 +9,15 @@
     "ignoreFiles": [
       "icons/chrome-web-store-icon.png",
       "icons/icon.png",
+      "jsconfig.json",
       "package.json",
       "README.md",
       "screenshots/"
     ]
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.x",
+    "@types/greasemonkey": "4.x",
+    "web-ext": "6.x"
   }
 }

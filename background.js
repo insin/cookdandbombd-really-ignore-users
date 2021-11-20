@@ -11,7 +11,7 @@ chrome.storage.local.get((config) => {
       chrome.storage.local.set({showIgnoredPosts: !showIgnoredPosts})
     },
     documentUrlPatterns: [
-      'https://www.cookdandbombd.co.uk/forums/index.php/topic*',
+      'https://www.cookdandbombd.co.uk/forums/index.php?topic*',
       'https://www.cookdandbombd.co.uk/forums/index.php?action=post*'
     ],
   })

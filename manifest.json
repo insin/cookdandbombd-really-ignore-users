@@ -4,7 +4,7 @@
   "short_name": "CaB Really Ignore Users",
   "description": "Really ignores ignored users",
   "homepage_url": "https://github.com/insin/cookdandbombd-really-ignore-users",
-  "version": "1.1",
+  "version": "1.2",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -20,8 +20,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.cookdandbombd.co.uk/forums/index.php/board*",
-        "https://www.cookdandbombd.co.uk/forums/index.php/topic*",
+        "https://www.cookdandbombd.co.uk/forums/index.php?board*",
+        "https://www.cookdandbombd.co.uk/forums/index.php?topic*",
         "https://www.cookdandbombd.co.uk/forums/index.php?action=post*",
         "https://www.cookdandbombd.co.uk/forums/index.php?action=profile;area=lists;sa=ignore*",
         "https://www.cookdandbombd.co.uk/forums/index.php?action=unread*"

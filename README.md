@@ -15,7 +15,7 @@ The following will now be hidden in topics (and when posting replies):
 - "You are ignoring this user" placeholders for posts by ignored users
 - Posts which quote an ignored user
 
-Topics created by ignored users will also be hidden.
+Topics created by ignored users will also be hidden by default.
 
 ## After installing
 
@@ -39,7 +39,7 @@ To temporarily view hidden posts, open your browser's right-click/context menu a
 |:-------:|:------:|
 | ![Screenshot of the 'Show ignored posts' menu item in Firefox](screenshots/firefox_context_menu.png) | ![Screenshot of the 'Show ignored posts' menu item in Chrome](screenshots/chrome_context_menu.png) |
 
-Ignored posts will be displayed with a fetching salmon highlight, with a new "Remove from ignore list" control added to ignored users:
+Ignored posts will be displayed, with a new "Remove from ignore list" control added to ignored users:
 
 ![Screenshot of ignored posts being shown](screenshots/showing_ignored_posts.png)
 
