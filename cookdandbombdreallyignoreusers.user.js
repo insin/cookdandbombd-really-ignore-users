@@ -11,6 +11,21 @@
 // @grant       GM.registerMenuCommand
 // ==/UserScript==
 
+/**
+ * @typedef {{
+ *   id: string
+ *   name: string
+ * }} IgnoredUser
+ */
+
+/**
+ * @typedef {{
+ *   $el: HTMLDivElement
+ *   isIgnored(): boolean
+ *   updateClassNames(): void
+ * }} Post
+ */
+
 const IGNORED_USERS_STORAGE = 'cab_ignoredUsers'
 
 let config = {
@@ -20,34 +35,35 @@ let config = {
   showIgnoredPosts: false,
 }
 
+/** @type {Post[]} */
 let posts = []
 
+/**
+ * @param {string} css
+ */
 function addStyle(css) {
   let $style = document.createElement('style')
   $style.appendChild(document.createTextNode(css))
   document.head.appendChild($style)
 }
 
-function addIgnoredPostsStyle() {
-  addStyle(`
-    .cab_ignoredPost {
-      display: none;
-    }
-    .cab_ignoredPost.cab_show {
-      display: block;
-      background-color: #ddd !important;
-    }
-  `)
-}
-
+/**
+ * @returns {IgnoredUser[]}
+ */
 function getIgnoredUsers() {
   return JSON.parse(localStorage[IGNORED_USERS_STORAGE] || '[]')
 }
 
+/**
+ * @param {IgnoredUser[]} ignoredUsers
+ */
 function storeIgnoredUsers(ignoredUsers) {
   localStorage[IGNORED_USERS_STORAGE] = JSON.stringify(ignoredUsers)
 }
 
+/**
+ * @param {boolean} showIgnoredPosts
+ */
 function toggleShowIgnoredPosts(showIgnoredPosts) {
   config.showIgnoredPosts = showIgnoredPosts
   posts.forEach(post => post.updateClassNames())
@@ -71,20 +87,32 @@ function reStripePosts() {
 }
 
 function TopicPage() {
-  addIgnoredPostsStyle()
-
   let isLoggedIn = document.querySelector('#profile_menu_top') != null
 
+  /** @type {IgnoredUser[]} */
   let ignoredUsers
+  /** @type {string[]} */
   let ignoredUserIds
+  /** @type {string[]} */
   let ignoredUserNames
 
+  /**
+   * @param {IgnoredUser[]} ignoreList
+   */
   function setIgnoredUsers(ignoreList) {
     ignoredUsers = ignoreList
     ignoredUserIds = ignoredUsers.map(user => user.id)
     ignoredUserNames = ignoredUsers.map(user => user.name)
   }
 
+  /**
+   * @param {{
+   *   $a: HTMLAnchorElement
+   *   $span: HTMLSpanElement
+   *   userId: string
+   *   userName: string
+   * }} kwargs
+   */
   function configureIgnoreControl({$a, $span, userId, userName}) {
     let isUserIgnored = ignoredUserIds.includes(userId)
     $a.href = `https://www.cookdandbombd.co.uk/forums/index.php?action=profile;area=lists;sa=ignore&${isUserIgnored ? `unignore=${userId}` : `ignore=${userName}`}`
@@ -93,12 +121,17 @@ function TopicPage() {
     $span.classList.toggle('ignore', !isUserIgnored)
   }
 
+  /**
+   * @param {HTMLDivElement} $wrapper
+   * @returns {Post}
+   */
   function Post($wrapper) {
-    let $userLink = $wrapper.querySelector('div.poster h4 a')
+    let $userLink = /** @type {HTMLAnchorElement} */ ($wrapper.querySelector('div.poster h4 a'))
 
     let userId = $userLink.href.match(/;u=(\d+)/)[1]
     let userName = $userLink.textContent
     let quotedUserNames = Array.from($wrapper.querySelectorAll('.post blockquote cite a')).map(
+      /** @param {HTMLAnchorElement} $a */
       $a => $a.textContent.match(/Quote from: (.+) on /)?.[1] || $a.textContent.match(/Quote from: (.+)/)?.[1]
     ).filter(Boolean)
 
@@ -198,6 +231,10 @@ function TopicPage() {
 function PostReplyPage() {
   let ignoredUserNames = getIgnoredUsers().map(user => user.name)
 
+  /**
+   * @param {HTMLDivElement} $wrapper
+   * @returns {Post}
+   */
   function Post($wrapper) {
     let $userHeader = $wrapper.querySelector('h5')
 
@@ -254,7 +291,7 @@ function IgnoreListPage() {
 
   // Automatically ignore a user if ignore=name is provided in the URL
   if (params.has('ignore')) {
-    let $newIgnoreInput = document.querySelector('#new_ignore')
+    let $newIgnoreInput = /** @type {HTMLInputElement} */ (document.querySelector('#new_ignore'))
     $newIgnoreInput.value = params.get('ignore')
     $newIgnoreInput.form.submit()
     return
@@ -262,8 +299,11 @@ function IgnoreListPage() {
 
   // Automatically unignore a user if unignore=id is provided in the URL
   if (params.has('unignore')) {
-    let $removeLink = Array.from(document.querySelectorAll('.table_grid tr td:last-child a')).find(
-      $a => $a.href.includes(`remove=${params.get('unignore')}`)
+    let $removeLink = /** @type {HTMLAnchorElement} */ (
+      Array.from(document.querySelectorAll('.table_grid tr td:last-child a')).find(
+        /** @param {HTMLAnchorElement} $a */
+        $a => $a.href.includes(`remove=${params.get('unignore')}`)
+      )
     )
     if ($removeLink) {
       $removeLink.click()
@@ -272,11 +312,15 @@ function IgnoreListPage() {
   }
 
   // Otherwise sync with the ignore list
-  let ignoredUsers = Array.from(document.querySelectorAll('.table_grid tr td:first-child a')).map($a => ({
-    id: $a.href.match(/;u=(\d+)/)[1],
-    name: $a.textContent,
-  }))
-  storeIgnoredUsers(ignoredUsers)
+  storeIgnoredUsers(
+    Array.from(document.querySelectorAll('.table_grid tr td:first-child a')).map(
+      /** @param {HTMLAnchorElement} $a */
+      $a => ({
+        id: $a.href.match(/;u=(\d+)/)?.[1],
+        name: $a.textContent,
+      })
+    )
+  )
 }
 
 function ForumPage() {
@@ -289,7 +333,7 @@ function ForumPage() {
   let ignoredUserIds = getIgnoredUsers().map(user => user.id)
 
   for (let $topicRow of document.querySelectorAll('#topic_container > div')) {
-    let $userLink = $topicRow.querySelector('.info .floatleft a')
+    let $userLink = /** @type {HTMLAnchorElement} */ ($topicRow.querySelector('.info .floatleft a'))
     let userId = $userLink?.href.match(/;u=(\d+)/)?.[1]
     if (ignoredUserIds.includes(userId)) {
       $topicRow.classList.add('cab_ignoredUser')
